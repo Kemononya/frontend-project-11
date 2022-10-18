@@ -1,3 +1,3 @@
-export default (path, value) => {
+export default (form) => (path, value) => {
   console.log(value);
 };
