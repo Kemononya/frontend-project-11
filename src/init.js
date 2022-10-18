@@ -7,12 +7,10 @@ export default () => {
     fields: {
       url: '',
     },
+    error: '',
     oldUrl: [],
-    state: 'invalid',
+    state: '',
   };
-  const schema = yup.object().shape({
-    url: yup.string().url().nullable(),
-  });
   const form = document.querySelector('form.rss-form');
   const watchedState = onChange(state, render(form));
   form.addEventListener('submit', (e) => {
@@ -20,11 +18,18 @@ export default () => {
     const formData = new FormData(e.target);
     const url = formData.get('url');
     watchedState.fields.url = url;
+
+    const schema = yup.object().shape({
+      url: yup.string().url().nullable().notOneOf(state.oldUrl),
+    });
     schema.validate(state.fields).then(() => {
       watchedState.state = 'valid';
+      watchedState.state = '';
       watchedState.oldUrl.push(url);
-    }).catch(() => {
+    }).catch((err) => {
+      watchedState.error = err;
       watchedState.state = 'invalid';
+      watchedState.state = '';
     });
   });
 };
