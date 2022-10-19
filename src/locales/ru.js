@@ -1,5 +1,5 @@
 export default {
   translation: {
-    key: 'value',
+    proxy: 'https://allorigins.hexlet.app/get?url=',
   },
 };

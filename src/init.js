@@ -1,14 +1,15 @@
 import onChange from 'on-change';
 import * as yup from 'yup';
 import i18n from 'i18next';
+import axios from 'axios';
 import ru from './locales/ru.js';
 import render from './render.js';
+import parser from './parser.js';
 
 export default () => {
   const i18nInstance = i18n.createInstance();
   i18nInstance.init({
     lng: 'ru',
-    debug: false,
     resources: {
       ru,
     },
@@ -18,29 +19,52 @@ export default () => {
     fields: {
       url: '',
     },
+    feeds: [
+      {
+        id: 1,
+        name: '',
+        description: '',
+      },
+    ],
+    posts: [
+      {
+        feedId: 1,
+        name: '',
+        description: '',
+        link: '',
+      },
+    ],
     error: '',
     addedUrls: [],
     state: '',
   };
   const form = document.querySelector('form.rss-form');
-  const watchedState = onChange(state, render(form));
+  const watchedState = onChange(state, render(state, form));
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const url = formData.get('url');
-    watchedState.fields.url = url;
+    state.fields.url = url;
 
     const schema = yup.object().shape({
       url: yup.string().url().nullable().notOneOf(state.addedUrls),
     });
-    schema.validate(state.fields).then(() => {
-      watchedState.state = 'valid';
-      watchedState.state = '';
-      watchedState.addedUrls.push(url);
-    }).catch((err) => {
-      watchedState.error = err;
-      watchedState.state = 'invalid';
-      watchedState.state = '';
-    });
+    schema.validate(state.fields)
+      .then(() => {
+        const modifiedUrl = `${i18nInstance.t('proxy')}${encodeURIComponent(url)}`;
+        return axios.get(modifiedUrl);
+      })
+      .then((response) => parser(state, response.data))
+      .then(() => {
+        watchedState.state = 'valid';
+        state.state = '';
+        state.addedUrls.push(url);
+      })
+      .catch((err) => {
+        console.log(err);
+        watchedState.state = 'invalid';
+        state.state = '';
+        watchedState.error = err;
+      });
   });
 };
