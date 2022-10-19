@@ -22,14 +22,14 @@ export default () => {
     feeds: [
       {
         id: 1,
-        name: '',
+        title: '',
         description: '',
       },
     ],
     posts: [
       {
         feedId: 1,
-        name: '',
+        title: '',
         description: '',
         link: '',
       },
@@ -54,17 +54,18 @@ export default () => {
         const modifiedUrl = `${i18nInstance.t('proxy')}${encodeURIComponent(url)}`;
         return axios.get(modifiedUrl);
       })
-      .then((response) => parser(state, response.data))
+      .then((response) => parser(watchedState, response.data))
       .then(() => {
         watchedState.state = 'valid';
         state.state = '';
         state.addedUrls.push(url);
+        console.log(state);
       })
       .catch((err) => {
-        console.log(err);
         watchedState.state = 'invalid';
         state.state = '';
         watchedState.error = err;
+        console.log(state);
       });
   });
 };
