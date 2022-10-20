@@ -19,21 +19,9 @@ export default () => {
     fields: {
       url: '',
     },
-    feeds: [
-      {
-        id: 1,
-        title: '',
-        description: '',
-      },
-    ],
-    posts: [
-      {
-        feedId: 1,
-        title: '',
-        description: '',
-        link: '',
-      },
-    ],
+    feeds: [],
+    posts: [],
+    activeFeed: '',
     error: '',
     addedUrls: [],
     state: '',
@@ -59,13 +47,12 @@ export default () => {
         watchedState.state = 'valid';
         state.state = '';
         state.addedUrls.push(url);
-        console.log(state);
       })
       .catch((err) => {
         watchedState.state = 'invalid';
         state.state = '';
         watchedState.error = err;
-        console.log(state);
+        console.log(err);
       });
   });
 };

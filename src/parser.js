@@ -17,10 +17,13 @@ export default (state, data) => {
       const title = item.querySelector('title').textContent;
       const description = item.querySelector('description').textContent;
       const link = item.querySelector('link').textContent;
+      const postId = uniqueId();
       state.posts.push({
-        feedId: id, title, description, link,
+        feedId: id, id: postId, title, description, link,
       });
     });
+
+    state.activeFeed = id;
   } else {
     throw new Error(data.status.error.name);
   }
