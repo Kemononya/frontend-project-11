@@ -5,6 +5,7 @@ import axios from 'axios';
 import ru from './locales/ru.js';
 import render from './render.js';
 import parser from './parser.js';
+import tracking from './tracking.js';
 
 export default () => {
   const i18nInstance = i18n.createInstance();
@@ -24,6 +25,7 @@ export default () => {
     newFeedId: '',
     error: '',
     addedUrls: [],
+    trackingPosts: [],
     state: '',
   };
   const form = document.querySelector('form.rss-form');
@@ -42,12 +44,13 @@ export default () => {
         const modifiedUrl = `${i18nInstance.t('proxy')}${encodeURIComponent(url)}`;
         return axios.get(modifiedUrl);
       })
-      .then((response) => parser(watchedState, response.data))
+      .then((response) => parser(watchedState, response.data, 'new'))
       .then((id) => {
         watchedState.state = 'valid';
         watchedState.newFeedId = id;
         state.state = '';
         state.addedUrls.push(url);
+        tracking(watchedState, url, i18nInstance, id);
       })
       .catch((err) => {
         watchedState.state = 'invalid';

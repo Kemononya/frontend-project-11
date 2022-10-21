@@ -75,4 +75,10 @@ export default (state, form, i18n) => (path, value, prevValue) => {
     const posts = state.posts.filter(({ feedId }) => value === feedId).reverse();
     renderPosts(posts, list, 'prepend');
   }
+  if (path === 'trackingPosts') {
+    const list = document.querySelector('.posts ul');
+    const existingPosts = state.posts.map(({ id }) => id);
+    const posts = state.trackingPosts.filter(({ id }) => !existingPosts.includes(id)).reverse();
+    renderPosts(posts, list, 'prepend');
+  }
 };
