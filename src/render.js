@@ -65,12 +65,12 @@ export default (state, form, i18n) => (path, value, prevValue) => {
       listEl.append(description);
     });
   }
-  if (path === 'newFeed' && !prevValue) {
+  if (path === 'newFeedId' && !prevValue) {
     const list = renderCommonParts('posts', i18n);
     const { posts } = state;
     renderPosts(posts, list, 'append');
   }
-  if (path === 'newFeed' && prevValue) {
+  if (path === 'newFeedId' && prevValue) {
     const list = document.querySelector('.posts ul');
     const posts = state.posts.filter(({ feedId }) => value === feedId).reverse();
     renderPosts(posts, list, 'prepend');

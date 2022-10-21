@@ -21,7 +21,7 @@ export default () => {
     },
     feeds: [],
     posts: [],
-    newFeed: '',
+    newFeedId: '',
     error: '',
     addedUrls: [],
     state: '',
@@ -43,8 +43,9 @@ export default () => {
         return axios.get(modifiedUrl);
       })
       .then((response) => parser(watchedState, response.data))
-      .then(() => {
+      .then((id) => {
         watchedState.state = 'valid';
+        watchedState.newFeedId = id;
         state.state = '';
         state.addedUrls.push(url);
       })

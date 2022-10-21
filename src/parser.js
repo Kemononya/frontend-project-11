@@ -22,8 +22,7 @@ export default (state, data) => {
         feedId: id, id: postId, title, description, link,
       });
     });
-    state.newFeed = id;
-  } else {
-    throw new Error(data.status.error.name);
+    return id;
   }
+  throw new Error(data.status.error.name);
 };
