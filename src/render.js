@@ -1,3 +1,6 @@
+import onChange from 'on-change';
+import render from './renderLinks.js';
+
 const renderCommonParts = (type, i18n) => {
   const container = document.querySelector(`.${type}`);
   container.innerHTML = '';
@@ -14,7 +17,7 @@ const renderCommonParts = (type, i18n) => {
   return list;
 };
 
-const renderPosts = (posts, list, direction, i18n) => {
+const renderPosts = (posts, list, direction, i18n, state) => {
   posts.forEach((post) => {
     const listEl = document.createElement('li');
     listEl.classList.add('list-group-item', 'd-flex', 'justify-content-between');
@@ -34,10 +37,10 @@ const renderPosts = (posts, list, direction, i18n) => {
     link.textContent = post.title;
     listEl.append(link);
 
-    link.addEventListener('click', (e) => {
-      e.target.classList.remove('fw-bold');
-      e.target.classList.add('fw-normal');
-      e.target.classList.add('link-secondary');
+    const watchedState = onChange(state, render(post));
+
+    link.addEventListener('click', () => {
+      watchedState.viewedPost = post.id;
     });
 
     const button = document.createElement('button');
@@ -50,9 +53,7 @@ const renderPosts = (posts, list, direction, i18n) => {
     listEl.append(button);
 
     button.addEventListener('click', () => {
-      link.classList.remove('fw-bold');
-      link.classList.add('fw-normal');
-      link.classList.add('link-secondary');
+      watchedState.viewedPost = post.id;
     });
   });
 };
@@ -89,17 +90,17 @@ export default (state, form, i18n) => (path, value, prevValue) => {
   if (path === 'newFeedId' && !prevValue) {
     const list = renderCommonParts('posts', i18n);
     const { posts } = state;
-    renderPosts(posts, list, 'append', i18n);
+    renderPosts(posts, list, 'append', i18n, state);
   }
   if (path === 'newFeedId' && prevValue) {
     const list = document.querySelector('.posts ul');
     const posts = state.posts.filter(({ feedId }) => value === feedId).reverse();
-    renderPosts(posts, list, 'prepend', i18n);
+    renderPosts(posts, list, 'prepend', i18n, state);
   }
   if (path === 'trackingPosts') {
     const list = document.querySelector('.posts ul');
     const existingPosts = state.posts.map(({ id }) => id);
     const posts = state.trackingPosts.filter(({ id }) => !existingPosts.includes(id)).reverse();
-    renderPosts(posts, list, 'prepend', i18n);
+    renderPosts(posts, list, 'prepend', i18n, state);
   }
 };

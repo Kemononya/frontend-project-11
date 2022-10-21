@@ -26,6 +26,7 @@ export default () => {
     error: '',
     addedUrls: [],
     trackingPosts: [],
+    viewedPost: '',
     state: '',
   };
   const form = document.querySelector('form.rss-form');
