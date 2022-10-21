@@ -14,7 +14,7 @@ const renderCommonParts = (type, i18n) => {
   return list;
 };
 
-const renderPosts = (posts, list, direction) => {
+const renderPosts = (posts, list, direction, i18n) => {
   posts.forEach((post) => {
     const listEl = document.createElement('li');
     listEl.classList.add('list-group-item', 'd-flex', 'justify-content-between');
@@ -33,6 +33,27 @@ const renderPosts = (posts, list, direction) => {
     link.setAttribute('rel', 'noopener noreferrer');
     link.textContent = post.title;
     listEl.append(link);
+
+    link.addEventListener('click', (e) => {
+      e.target.classList.remove('fw-bold');
+      e.target.classList.add('fw-normal');
+      e.target.classList.add('link-secondary');
+    });
+
+    const button = document.createElement('button');
+    button.setAttribute('type', 'button');
+    button.classList.add('btn', 'btn-outline-primary', 'btn-sm');
+    button.dataset.id = post.id;
+    button.dataset.bsToggle = 'modal';
+    button.dataset.bsTarget = '#modal';
+    button.textContent = i18n.t('button');
+    listEl.append(button);
+
+    button.addEventListener('click', () => {
+      link.classList.remove('fw-bold');
+      link.classList.add('fw-normal');
+      link.classList.add('link-secondary');
+    });
   });
 };
 
@@ -68,17 +89,17 @@ export default (state, form, i18n) => (path, value, prevValue) => {
   if (path === 'newFeedId' && !prevValue) {
     const list = renderCommonParts('posts', i18n);
     const { posts } = state;
-    renderPosts(posts, list, 'append');
+    renderPosts(posts, list, 'append', i18n);
   }
   if (path === 'newFeedId' && prevValue) {
     const list = document.querySelector('.posts ul');
     const posts = state.posts.filter(({ feedId }) => value === feedId).reverse();
-    renderPosts(posts, list, 'prepend');
+    renderPosts(posts, list, 'prepend', i18n);
   }
   if (path === 'trackingPosts') {
     const list = document.querySelector('.posts ul');
     const existingPosts = state.posts.map(({ id }) => id);
     const posts = state.trackingPosts.filter(({ id }) => !existingPosts.includes(id)).reverse();
-    renderPosts(posts, list, 'prepend');
+    renderPosts(posts, list, 'prepend', i18n);
   }
 };
