@@ -21,7 +21,7 @@ export default () => {
     },
     feeds: [],
     posts: [],
-    activeFeed: '',
+    newFeed: '',
     error: '',
     addedUrls: [],
     state: '',

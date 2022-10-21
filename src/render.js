@@ -14,7 +14,29 @@ const renderCommonParts = (type, i18n) => {
   return list;
 };
 
-export default (state, form, i18n) => (path, value) => {
+const renderPosts = (posts, list, direction) => {
+  posts.forEach((post) => {
+    const listEl = document.createElement('li');
+    listEl.classList.add('list-group-item', 'd-flex', 'justify-content-between');
+    listEl.classList.add('align-items-start', 'border-0', 'border-end-0');
+    if (direction === 'append') {
+      list.append(listEl);
+    } else if (direction === 'prepend') {
+      list.prepend(listEl);
+    }
+
+    const link = document.createElement('a');
+    link.setAttribute('href', post.link);
+    link.classList.add('fw-bold');
+    link.dataset.id = post.id;
+    link.setAttribute('target', '_blank');
+    link.setAttribute('rel', 'noopener noreferrer');
+    link.textContent = post.title;
+    listEl.append(link);
+  });
+};
+
+export default (state, form, i18n) => (path, value, prevValue) => {
   if (path === 'state') {
     const input = form.elements.url;
     if (value === 'invalid') {
@@ -30,7 +52,7 @@ export default (state, form, i18n) => (path, value) => {
     state.feeds.forEach((feed) => {
       const listEl = document.createElement('li');
       listEl.classList.add('list-group-item', 'border-0', 'border-end-0');
-      list.append(listEl);
+      list.prepend(listEl);
 
       const title = document.createElement('h3');
       title.classList.add('h6', 'm-0');
@@ -43,23 +65,14 @@ export default (state, form, i18n) => (path, value) => {
       listEl.append(description);
     });
   }
-  if (path === 'activeFeed') {
+  if (path === 'newFeed' && !prevValue) {
     const list = renderCommonParts('posts', i18n);
-    const posts = state.posts.filter(({ feedId }) => feedId === value);
-    posts.forEach((post) => {
-      const listEl = document.createElement('li');
-      listEl.classList.add('list-group-item', 'd-flex', 'justify-content-between');
-      listEl.classList.add('align-items-start', 'border-0', 'border-end-0');
-      list.append(listEl);
-
-      const link = document.createElement('a');
-      link.setAttribute('href', post.link);
-      link.classList.add('fw-bold');
-      link.dataset.id = post.id;
-      link.setAttribute('target', '_blank');
-      link.setAttribute('rel', 'noopener noreferrer');
-      link.textContent = post.title;
-      listEl.append(link);
-    });
+    const { posts } = state;
+    renderPosts(posts, list, 'append');
+  }
+  if (path === 'newFeed' && prevValue) {
+    const list = document.querySelector('.posts ul');
+    const posts = state.posts.filter(({ feedId }) => value === feedId).reverse();
+    renderPosts(posts, list, 'prepend');
   }
 };
