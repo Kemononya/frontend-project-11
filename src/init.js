@@ -56,6 +56,10 @@ export default () => {
         const modifiedUrl = `${i18nInstance.t('proxy')}${encodeURIComponent(url)}`;
         return axios.get(modifiedUrl);
       })
+      .catch((err) => {
+        state.networkError = err;
+        throw new Error();
+      })
       .then((response) => {
         const id = uniqueId();
         parser(watchedState, response.data, 'new', id);
