@@ -67,6 +67,11 @@ export default (state, form, i18n) => (path, value, prevValue) => {
       input.classList.remove('is-invalid');
       form.reset();
       input.focus();
+
+      const feedbackContainer = document.querySelector('.feedback');
+      feedbackContainer.classList.remove('text-danger');
+      feedbackContainer.classList.add('text-success');
+      feedbackContainer.textContent = i18n.t('success');
     }
   }
   if (path === 'feeds') {

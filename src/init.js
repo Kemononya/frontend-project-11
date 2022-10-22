@@ -57,7 +57,7 @@ export default () => {
         watchedState.state = 'invalid';
         state.state = '';
         watchedState.error = err;
-        console.log(err);
+        console.error(err);
       });
   });
 };
