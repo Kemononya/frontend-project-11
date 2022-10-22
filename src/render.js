@@ -1,7 +1,7 @@
 import onChange from 'on-change';
 import render from './renderLinks.js';
 
-const renderCommonParts = (type, i18n) => {
+const createList = (type, i18n) => {
   const container = document.querySelector(`.${type}`);
   container.innerHTML = '';
   const div = document.createElement('div');
@@ -17,8 +17,7 @@ const renderCommonParts = (type, i18n) => {
   return list;
 };
 
-const renderCommonPartsOfError = (form) => {
-  form.elements.url.classList.add('is-invalid');
+const createFeedbackContainer = () => {
   const feedbackContainer = document.querySelector('.feedback');
   feedbackContainer.classList.remove('text-success');
   feedbackContainer.classList.add('text-danger');
@@ -68,7 +67,8 @@ const renderPosts = (posts, list, direction, i18n, state) => {
 
 export default (state, form, i18n) => (path, value, prevValue) => {
   if (path === 'error') {
-    const feedbackContainer = renderCommonPartsOfError(form);
+    form.elements.url.classList.add('is-invalid');
+    const feedbackContainer = createFeedbackContainer();
     if (value.name === i18n.t('errorNames.validation')) {
       if (value.errors.toString() === i18n.t('errors.invalidUrl')) {
         feedbackContainer.textContent = i18n.t('errors.invalidUrl');
@@ -80,11 +80,12 @@ export default (state, form, i18n) => (path, value, prevValue) => {
     }
   }
   if (path === 'parsingErrors') {
-    const feedbackContainer = renderCommonPartsOfError(form);
+    form.elements.url.classList.add('is-invalid');
+    const feedbackContainer = createFeedbackContainer();
     feedbackContainer.textContent = i18n.t('errors.invalidRss');
   }
   if (path === 'feeds') {
-    const list = renderCommonParts('feeds', i18n);
+    const list = createList('feeds', i18n);
     state.feeds.forEach((feed) => {
       const listEl = document.createElement('li');
       listEl.classList.add('list-group-item', 'border-0', 'border-end-0');
@@ -111,7 +112,7 @@ export default (state, form, i18n) => (path, value, prevValue) => {
     feedbackContainer.textContent = i18n.t('success');
   }
   if (path === 'newFeedId' && !prevValue) {
-    const list = renderCommonParts('posts', i18n);
+    const list = createList('posts', i18n);
     const { posts } = state;
     renderPosts(posts, list, 'append', i18n, state);
   }
