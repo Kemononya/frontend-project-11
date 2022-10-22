@@ -61,7 +61,7 @@ export default () => {
         return axios.get(modifiedUrl);
       })
       .catch((err) => {
-        state.networkError = err;
+        state.networkError.push(err);
         throw new Error();
       })
       .then((response) => {
