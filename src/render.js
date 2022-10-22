@@ -81,6 +81,10 @@ export default (state, form, i18n) => (path, value, prevValue) => {
     const feedbackContainer = renderCommonPartsOfError(form);
     feedbackContainer.textContent = i18n.t('errors.invalidRss');
   }
+  if (path === 'networkError') {
+    const feedbackContainer = renderCommonPartsOfError(form);
+    feedbackContainer.textContent = i18n.t('errors.network');
+  }
   if (path === 'feeds') {
     const list = renderCommonParts('feeds', i18n);
     state.feeds.forEach((feed) => {

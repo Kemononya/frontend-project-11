@@ -26,6 +26,7 @@ export default () => {
     newFeedId: '',
     error: '',
     parsingError: [],
+    networkError: [],
     addedUrls: [],
     trackingPosts: [],
     viewedPost: '',

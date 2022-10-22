@@ -44,7 +44,6 @@ export default (state, data, type, curFeedId, id) => {
     }
   } catch (err) {
     state.parsingError.push(err);
-    state.parsingError.pop();
     throw new Error();
   }
 };
