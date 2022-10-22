@@ -25,8 +25,7 @@ export default () => {
     posts: [],
     newFeedId: '',
     error: '',
-    parsingError: [],
-    networkError: [],
+    parsingErrors: [],
     addedUrls: [],
     trackingPosts: [],
     viewedPost: '',
@@ -52,17 +51,9 @@ export default () => {
       url: yup.string().url().nullable().notOneOf(state.addedUrls),
     });
     schema.validate(state.fields)
-      .catch((err) => {
-        watchedState.error = err;
-        throw new Error();
-      })
       .then(() => {
         const modifiedUrl = `${i18nInstance.t('proxy')}${encodeURIComponent(url)}`;
         return axios.get(modifiedUrl);
-      })
-      .catch((err) => {
-        state.networkError.push(err);
-        throw new Error();
       })
       .then((response) => {
         const id = uniqueId();

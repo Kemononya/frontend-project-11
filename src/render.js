@@ -75,15 +75,13 @@ export default (state, form, i18n) => (path, value, prevValue) => {
       } else if (value.errors.toString() === i18n.t('errors.addedRss')) {
         feedbackContainer.textContent = i18n.t('errors.addedRss');
       }
+    } else if (value.name === i18n.t('errorNames.axios')) {
+      feedbackContainer.textContent = i18n.t('errors.network');
     }
   }
-  if (path === 'parsingError') {
+  if (path === 'parsingErrors') {
     const feedbackContainer = renderCommonPartsOfError(form);
     feedbackContainer.textContent = i18n.t('errors.invalidRss');
-  }
-  if (path === 'networkError') {
-    const feedbackContainer = renderCommonPartsOfError(form);
-    feedbackContainer.textContent = i18n.t('errors.network');
   }
   if (path === 'feeds') {
     const list = renderCommonParts('feeds', i18n);

@@ -43,7 +43,7 @@ export default (state, data, type, curFeedId, id) => {
       });
     }
   } catch (err) {
-    state.parsingError.push(err);
+    state.parsingErrors.push(err);
     throw new Error();
   }
 };
