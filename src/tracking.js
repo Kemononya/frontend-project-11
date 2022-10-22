@@ -9,5 +9,5 @@ export default (state, url, i18n, feedId) => {
       .catch((err) => console.error(err))
       .then(() => setTimeout(() => iter(), 5000));
   };
-  iter();
+  setTimeout(() => iter(), 5000);
 };

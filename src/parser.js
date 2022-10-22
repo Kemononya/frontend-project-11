@@ -1,6 +1,6 @@
 import uniqueId from 'lodash/uniqueId';
 
-export default (state, data, type, curFeedId, id) => {
+export default (state, data, type, curFeedId) => {
   try {
     const parser = new DOMParser();
     const document = parser.parseFromString(data.contents, 'text/xml');
@@ -9,7 +9,7 @@ export default (state, data, type, curFeedId, id) => {
       const chaTitle = document.querySelector('channel > title').textContent;
       const chaDescription = document.querySelector('channel > description').textContent;
       state.feeds.push({
-        id, title: chaTitle, description: chaDescription,
+        id: curFeedId, title: chaTitle, description: chaDescription,
       });
 
       items.forEach((item) => {
@@ -18,7 +18,7 @@ export default (state, data, type, curFeedId, id) => {
         const link = item.querySelector('link').textContent;
         const postId = uniqueId();
         state.posts.push({
-          feedId: id, id: postId, title, description, link,
+          feedId: curFeedId, id: postId, title, description, link,
         });
       });
     }
