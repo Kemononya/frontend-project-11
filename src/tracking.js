@@ -8,7 +8,7 @@ export default (state, url, i18n, feedId) => {
       .then((response) => {
         parser(state, response.data, 'existing', feedId);
       })
-      .catch((err) => console.log(err))
+      .catch((err) => console.error(err))
       .then(() => setTimeout(() => iter(), 5000));
   };
   iter();

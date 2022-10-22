@@ -8,8 +8,8 @@ export default {
     errors: {
       invalidUrl: 'Ссылка должна быть валидным URL',
       invalidRss: 'Ресурс не содержит валидный RSS',
-      addedUrl: 'URL уже существует',
-      networkErr: 'Ошибка сети',
+      addedRss: 'RSS уже существует',
+      network: 'Ошибка сети',
     },
   },
 };

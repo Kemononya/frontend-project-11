@@ -74,6 +74,21 @@ export default (state, form, i18n) => (path, value, prevValue) => {
       feedbackContainer.textContent = i18n.t('success');
     }
   }
+  if (path === 'error') {
+    const feedbackContainer = document.querySelector('.feedback');
+    feedbackContainer.classList.remove('text-success');
+    feedbackContainer.classList.add('text-danger');
+    switch (value) {
+      case i18n.t('errors.invalidUrl'):
+        feedbackContainer.textContent = i18n.t('errors.invalidUrl');
+        break;
+      case i18n.t('errors.addedRss'):
+        feedbackContainer.textContent = i18n.t('errors.addedRss');
+        break;
+      default:
+        feedbackContainer.textContent = value;
+    }
+  }
   if (path === 'feeds') {
     const list = renderCommonParts('feeds', i18n);
     state.feeds.forEach((feed) => {

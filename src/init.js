@@ -37,6 +37,15 @@ export default () => {
     const url = formData.get('url');
     state.fields.url = url;
 
+    yup.setLocale({
+      mixed: {
+        notOneOf: i18nInstance.t('errors.addedRss'),
+        default: 'field_invalid',
+      },
+      string: {
+        url: i18nInstance.t('errors.invalidUrl'),
+      },
+    });
     const schema = yup.object().shape({
       url: yup.string().url().nullable().notOneOf(state.addedUrls),
     });
@@ -56,8 +65,7 @@ export default () => {
       .catch((err) => {
         watchedState.state = 'invalid';
         state.state = '';
-        watchedState.error = err;
-        console.error(err);
+        watchedState.error = err.errors.toString();
       });
   });
 };
