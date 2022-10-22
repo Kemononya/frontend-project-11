@@ -17,6 +17,14 @@ const renderCommonParts = (type, i18n) => {
   return list;
 };
 
+const renderCommonPartsOfError = (form) => {
+  form.elements.url.classList.add('is-invalid');
+  const feedbackContainer = document.querySelector('.feedback');
+  feedbackContainer.classList.remove('text-success');
+  feedbackContainer.classList.add('text-danger');
+  return feedbackContainer;
+};
+
 const renderPosts = (posts, list, direction, i18n, state) => {
   posts.forEach((post) => {
     const listEl = document.createElement('li');
@@ -59,35 +67,19 @@ const renderPosts = (posts, list, direction, i18n, state) => {
 };
 
 export default (state, form, i18n) => (path, value, prevValue) => {
-  if (path === 'state') {
-    const input = form.elements.url;
-    if (value === 'invalid') {
-      input.classList.add('is-invalid');
-    } else if (value === 'valid') {
-      input.classList.remove('is-invalid');
-      form.reset();
-      input.focus();
-
-      const feedbackContainer = document.querySelector('.feedback');
-      feedbackContainer.classList.remove('text-danger');
-      feedbackContainer.classList.add('text-success');
-      feedbackContainer.textContent = i18n.t('success');
+  if (path === 'error') {
+    const feedbackContainer = renderCommonPartsOfError(form);
+    if (value.name === i18n.t('errorNames.validation')) {
+      if (value.errors.toString() === i18n.t('errors.invalidUrl')) {
+        feedbackContainer.textContent = i18n.t('errors.invalidUrl');
+      } else if (value.errors.toString() === i18n.t('errors.addedRss')) {
+        feedbackContainer.textContent = i18n.t('errors.addedRss');
+      }
     }
   }
-  if (path === 'error') {
-    const feedbackContainer = document.querySelector('.feedback');
-    feedbackContainer.classList.remove('text-success');
-    feedbackContainer.classList.add('text-danger');
-    switch (value) {
-      case i18n.t('errors.invalidUrl'):
-        feedbackContainer.textContent = i18n.t('errors.invalidUrl');
-        break;
-      case i18n.t('errors.addedRss'):
-        feedbackContainer.textContent = i18n.t('errors.addedRss');
-        break;
-      default:
-        feedbackContainer.textContent = value;
-    }
+  if (path === 'parsingError') {
+    const feedbackContainer = renderCommonPartsOfError(form);
+    feedbackContainer.textContent = i18n.t('errors.invalidRss');
   }
   if (path === 'feeds') {
     const list = renderCommonParts('feeds', i18n);
@@ -106,6 +98,15 @@ export default (state, form, i18n) => (path, value, prevValue) => {
       description.textContent = feed.description;
       listEl.append(description);
     });
+    const input = form.elements.url;
+    input.classList.remove('is-invalid');
+    form.reset();
+    input.focus();
+
+    const feedbackContainer = document.querySelector('.feedback');
+    feedbackContainer.classList.remove('text-danger');
+    feedbackContainer.classList.add('text-success');
+    feedbackContainer.textContent = i18n.t('success');
   }
   if (path === 'newFeedId' && !prevValue) {
     const list = renderCommonParts('posts', i18n);

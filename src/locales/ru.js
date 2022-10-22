@@ -5,6 +5,9 @@ export default {
     posts: 'Посты',
     button: 'Просмотр',
     success: 'RSS успешно загружен',
+    errorNames: {
+      validation: 'ValidationError',
+    },
     errors: {
       invalidUrl: 'Ссылка должна быть валидным URL',
       invalidRss: 'Ресурс не содержит валидный RSS',
